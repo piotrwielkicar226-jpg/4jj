@@ -7,15 +7,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - run: |
+
+      - name: Segreguj pliki
+        run: |
           mkdir -p src/main/java/com/piotr/firetrail
           mkdir -p src/main/resources
-          mkdir -p.github/workflows
-          [ -f FireTrail.java ] && mv FireTrail.java src/main/java/com/piotr/firetrail/
-          [ -f TrailListener.java ] && mv TrailListener.java src/main/java/com/piotr/firetrail/
-          [ -f plugin.yml ] && mv plugin.yml src/main/resources/
-          [ -f config.yml ] && mv config.yml src/main/resources/
-          echo "name: Build
+          [ -f FireTrail.java ] && mv FireTrail.java src/main/java/com/piotr/firetrail/FireTrail.java || true
+          [ -f TrailListener.java ] && mv TrailListener.java src/main/java/com/piotr/firetrail/TrailListener.java || true
+          [ -f plugin.yml ] && mv plugin.yml src/main/resources/plugin.yml || true
+          [ -f config.yml ] && mv config.yml src/main/resources/config.yml || true
+
+          cat >.github/workflows/build.yml << 'EOF'
+          name: Build
           on: [push]
           jobs:
             build:
@@ -26,11 +29,15 @@ jobs:
                   with:
                     distribution: temurin
                     java-version: 17
-                - run: mvn package
+                    cache: maven
+                - run: mvn clean package
                 - uses: actions/upload-artifact@v4
                   with:
-                    name: jar
-                    path: target/*.jar" >.github/workflows/build.yml
-      - uses: stefanzweifel/git-auto-commit-action@v5
+                    name: FireTrail-jar
+                    path: target/*.jar
+          EOF
+
+      - name: Commit zmian
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto: posegregowano pliki"
+          commit_message: "Auto: posegregowano pliki do Maven"
