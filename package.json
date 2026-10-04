@@ -4,8 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
-    "build:apk": "eas build --platform android --profile preview --local"
+    "android": "expo run:android"
   },
   "dependencies": {
     "expo": "~50.0.13",
@@ -13,7 +12,9 @@
     "react-native": "0.73.5",
     "expo-status-bar": "~1.11.1",
     "react-native-paper": "^5.12.3",
-    "@expo/vector-icons": "^14.0.0"
+    "@expo/vector-icons": "^14.0.0",
+    "base-64": "^1.0.0",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
