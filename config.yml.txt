@@ -1,6 +1,0 @@
-# FireTrail config
-trail:
-  particles: true
-  set-fire-blocks: true
-  fire-duration-ticks: 60 # 3 sekundy
-  particle-amount: 3
