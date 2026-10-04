@@ -1,0 +1,36 @@
+name: AUTO SEGREGACJA
+on: [push]
+jobs:
+  sort:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p src/main/java/com/piotr/firetrail
+          mkdir -p src/main/resources
+          mkdir -p.github/workflows
+          [ -f FireTrail.java ] && mv FireTrail.java src/main/java/com/piotr/firetrail/
+          [ -f TrailListener.java ] && mv TrailListener.java src/main/java/com/piotr/firetrail/
+          [ -f plugin.yml ] && mv plugin.yml src/main/resources/
+          [ -f config.yml ] && mv config.yml src/main/resources/
+          echo "name: Build
+          on: [push]
+          jobs:
+            build:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-java@v4
+                  with:
+                    distribution: temurin
+                    java-version: 17
+                - run: mvn package
+                - uses: actions/upload-artifact@v4
+                  with:
+                    name: jar
+                    path: target/*.jar" >.github/workflows/build.yml
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto: posegregowano pliki"
